@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINISO 投研分析仪表盘 | Q3 2025 深度解构</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-gradient-start: #1e293b;
+            --surface-glass: rgba(255, 255, 255, 0.05);
+            --surface-glass-hover: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --neon-green: #10b981;
+            --warning-red: #ef4444;
+            --tech-blue: #3b82f6;
+            --glow-green: rgba(16, 185, 129, 0.3);
+            --glow-red: rgba(239, 68, 68, 0.3);
+            --glow-blue: rgba(59, 130, 246, 0.3);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at 20% 50%, var(--bg-gradient-start) 0%, var(--bg-dark) 50%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--surface-glass);
+            border-radius: 16px;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(20px);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--neon-green), var(--tech-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .tagline {
+            font-size: 1.2rem;
+            color: var(--neon-green);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .meta-tags {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .tag-stock {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+        }
+
+        .tag-date {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--tech-blue);
+            border: 1px solid var(--tech-blue);
+        }
+
+        .tag-sector {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--warning-red);
+            border: 1px solid var(--warning-red);
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--surface-glass);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin: 1rem 0 0.5rem;
+            color: var(--neon-green);
+            font-weight: 600;
+        }
+
+        /* Logic Engine */
+        .logic-step {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid var(--tech-blue);
+            border-radius: 8px;
+        }
+
+        .logic-step .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: var(--tech-blue);
+            color: var(--bg-dark);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .logic-step h4 {
+            display: inline;
+            font-size: 1rem;
+            color: var(--tech-blue);
+        }
+
+        .logic-step p {
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .valuation-box {
+            background: rgba(16, 185, 129, 0.15);
+            border: 2px solid var(--neon-green);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .valuation-box .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neon-green);
+        }
+
+        .valuation-box .range {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Opportunity Cards */
+        .opportunity-card {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .opportunity-card:hover {
+            background: rgba(16, 185, 129, 0.12);
+            box-shadow: 0 0 20px var(--glow-green);
+        }
+
+        .opportunity-card h4 {
+            color: var(--neon-green);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .catalyst-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.5rem 0;
+        }
+
+        .catalyst-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--tech-blue);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .opportunity-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .expected-return {
+            font-size: 1.3rem;
+            color: var(--neon-green);
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+
+        /* Risk Radar */
+        .risk-item {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .risk-item h4 {
+            color: var(--warning-red);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-severity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .risk-severity .label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            min-width: 60px;
+        }
+
+        .risk-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--warning-red), #f97316);
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .risk-item p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .action-label {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--warning-red);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* AI Deep Dive */
+        .ai-section {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(20px);
+        }
+
+        .ai-section h2 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--neon-green), var(--tech-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .ai-card {
+            background: var(--surface-glass);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-glass);
+        }
+
+        .ai-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        .ai-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ai-card li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ai-card li:last-child {
+            border-bottom: none;
+        }
+
+        .ai-card li strong {
+            color: var(--text-primary);
+        }
+
+        /* Investment Score */
+        .score-section {
+            background: var(--surface-glass);
+            border: 2px solid var(--neon-green);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .score-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--neon-green);
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--neon-green) 0% 70%, rgba(255, 255, 255, 0.1) 70% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem auto;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            z-index: 1;
+        }
+
+        .strategy-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid var(--tech-blue);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        .strategy-box h4 {
+            color: var(--tech-blue);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .strategy-step {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+        }
+
+        .strategy-step .step-label {
+            color: var(--neon-green);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .strategy-step p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .ai-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .meta-tags {
+                flex-direction: column;
+            }
+        }
+
+        /* Animations */
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px var(--glow-green); }
+            50% { box-shadow: 0 0 30px var(--glow-green); }
+        }
+
+        .opportunity-card:hover {
+            animation: glow 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>MINISO 投研分析仪表盘</h1>
+            <p class="tagline">📊 一家被低估的全球IP零售帝国，正在用"10元店"打败奢侈品牌</p>
+            <div class="meta-tags">
+                <span class="tag tag-stock">名創優品 MNSO | 9896.HK</span>
+                <span class="tag tag-date">Q3 2025 財報 | 2025年11月21日</span>
+                <span class="tag tag-sector">全球價值零售 | IP驅動模式</span>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard">
+            <!-- Left: Logic Engine -->
+            <div class="card">
+                <h2>🧠 投資邏輯引擎</h2>
+                
+                <div class="logic-step">
+                    <span class="step-number">1</span>
+                    <h4>核心資產全景</h4>
+                    <p><strong>全球8,138家門店</strong>（同比+718家），覆蓋107個國家。Q3季度收入首破50億人民幣大關（¥57.97億），同比暴增28.2%。</p>
+                    <p><strong>雙品牌驅動：</strong>MINISO主品牌（7,831店）+ TOP TOY潮玩品牌（307店，收入爆增111.4%）</p>
+                </div>
+
+                <div class="logic-step">
+                    <span class="step-number">2</span>
+                    <h4>估值邏輯拆解</h4>
+                    <p><strong>盈利能力：</strong>調整後淨利潤率13.2%（¥7.67億），調整後EBITDA利潤率23.4%（¥13.54億）。現金牛體質，經營現金流與調整淨利潤比率高達1.7。</p>
+                    <p><strong>增長引擎：</strong>中國內地同店銷售（SSS）從負轉正至高個位數增長，海外市場保持低個位數增長，直營店收入激增69.9%。</p>
+                </div>
+
+                <div class="logic-step">
+                    <span class="step-number">3</span>
+                    <h4>合理估值區間</h4>
+                    <p>基於PE 15-18x（考慮增長放緩風險）和調整後EPS ¥6.64，目標價區間為 <strong>$23-26美元</strong>。當前股價$21.82，<strong>上行空間5-19%</strong>。</p>
+                </div>
+
+                <div class="valuation-box">
+                    <div class="price">$24.50</div>
+                    <div class="range">目標價 | 12個月期</div>
+                    <div class="range">當前價 $21.82 | 潛在回報 +12.3%</div>
+                </div>
+            </div>
+
+            <!-- Center: Core Opportunities -->
+            <div class="card">
+                <h2>🚀 核心機會矩陣</h2>
+
+                <div class="opportunity-card">
+                    <h4>機會1：IP授權的現金印鈔機</h4>
+                    <div class="catalyst-tags">
+                        <span class="catalyst-tag">毛利率30-50%</span>
+                        <span class="catalyst-tag">迪士尼/三麗鷗合作</span>
+                        <span class="catalyst-tag">盲盒經濟</span>
+                    </div>
+                    <p><strong>業務模式：</strong>與30+全球IP合作（如迪士尼、漫威、三麗鷗），推出限量盲盒/聯名商品。IP產品占MINISO SPACE旗艦店銷售額的70%，全球IP銷售額達20億人民幣。</p>
+                    <p><strong>營收驅動：</strong>IP產品毛利率比普通商品高20-30個百分點，年複合增長率40%+。</p>
+                    <p><strong>競爭優勢：</strong>輕資產模式（無需囤貨）+ 快速迭代能力（15天推出新品）+ 社交媒體裂變效應（Z世代客群）。</p>
+                    <div class="expected-return">預期空間：IP業務3年內貢獻50%收入</div>
+                </div>
+
+                <div class="opportunity-card">
+                    <h4>機會2：海外市場的跑馬圈地</h4>
+                    <div class="catalyst-tags">
+                        <span class="catalyst-tag">北美擴張</span>
+                        <span class="catalyst-tag">直營店轉型</span>
+                        <span class="catalyst-tag">奢侈品商場入駐</span>
+                    </div>
+                    <p><strong>業務模式：</strong>從低成本加盟模式轉向高毛利直營模式，重點布局北美（421店，+127家）和歐洲（337店，+77家）奢侈品購物中心。</p>
+                    <p><strong>營收驅動：</strong>海外直營店經營利潤率同比提升，美國市場單店年收入達$150-200萬美元。</p>
+                    <p><strong>競爭優勢：</strong>"日式美學+中國供應鏈"組合拳，價格僅為同類品牌的1/3-1/2，卻提供奢侈品級購物體驗。</p>
+                    <div class="expected-return">預期空間：海外收入占比從42%提升至55%</div>
+                </div>
+
+                <div class="opportunity-card">
+                    <h4>機會3：TOP TOY的潮玩黑馬</h4>
+                    <div class="catalyst-tags">
+                        <span class="catalyst-tag">111%增長</span>
+                        <span class="catalyst-tag">Z世代粘性</span>
+                        <span class="catalyst-tag">高復購率</span>
+                    </div>
+                    <p><strong>業務模式：</strong>專注18-35歲潮玩收藏者，產品線涵蓋盲盒、手辦、BJD娃娃。307家門店中，直營占比提升至13.7%。</p>
+                    <p><strong>營收驅動：</strong>Q3收入¥5.75億（同比+111.4%），年化收入已達¥20億+。會員復購率超60%，客單價¥200+。</p>
+                    <p><strong>競爭優勢：</strong>搶先布局ACG賽道，避開泡泡瑪特直接競爭，通過跨界聯名（如變形金剛）鎖定男性客群。</p>
+                    <div class="expected-return">預期空間：2年內IPO分拆，估值$1-2B</div>
+                </div>
+            </div>
+
+            <!-- Right: Risk Radar -->
+            <div class="card">
+                <h2>⚠️ 風險雷達 & 止損系統</h2>
+
+                <div class="risk-item">
+                    <h4>風險1：毛利率壓縮 - 利潤率持續下滑</h4>
+                    <div class="risk-severity">
+                        <span class="label">嚴重度</span>
+                        <div class="risk-bar">
+                            <div class="risk-bar-fill" style="width: 75%;"></div>
+                        </div>
+                        <span class="label">75%</span>
+                    </div>
+                    <p><strong>現狀：</strong>調整後經營利潤率從19.7%降至17.6%（-2.1pp），調整後淨利潤率從15.2%降至13.2%（-2pp）。</p>
+                    <p><strong>原因：</strong>海外直營店擴張導致租金、人力成本激增（相關開支同比+40.7%）；推廣費用同比+43.3%。</p>
+                    <span class="action-label">止損操作：若利潤率降至12%以下，減倉50%</span>
+                </div>
+
+                <div class="risk-item">
+                    <h4>風險2：中國消費疲軟 - 內需復甦脆弱</h4>
+                    <div class="risk-severity">
+                        <span class="label">嚴重度</span>
+                        <div class="risk-bar">
+                            <div class="risk-bar-fill" style="width: 65%;"></div>
+                        </div>
+                        <span class="label">65%</span>
+                    </div>
+                    <p><strong>現狀：</strong>中國零售銷售增長從7%降至3.2%（2025上半年），餐飲/家電等品類增速放緩至5%以下。</p>
+                    <p><strong>影響：</strong>MINISO中國內地收入雖增長19.3%，但基於低基數效應（2024年疫情後復甦），若宏觀環境惡化，SSS增長可能再次轉負。</p>
+                    <span class="action-label">止損操作：中國SSS連續2季度負增長，清倉</span>
+                </div>
+
+                <div class="risk-item">
+                    <h4>風險3：永輝超市拖累 - 投資虧損黑洞</h4>
+                    <div class="risk-severity">
+                        <span class="label">嚴重度</span>
+                        <div class="risk-bar">
+                            <div class="risk-bar-fill" style="width: 85%;"></div>
+                        </div>
+                        <span class="label">85%</span>
+                    </div>
+                    <p><strong>現狀：</strong>Q3分擔永輝虧損¥1.46億，導致期內利潤從¥6.48億暴跌至¥4.43億（-31.6%）。前三季度累計分擔虧損¥2.84億。</p>
+                    <p><strong>風險：</strong>永輝持續虧損侵蝕MINISO現金流，且銀行借款利息支出激增（¥2,420萬）。</p>
+                    <span class="action-label">止損操作：若永輝虧損超¥5億/年，要求管理層退出投資</span>
+                </div>
+
+                <div class="risk-item">
+                    <h4>風險4：股權稀釋 - 股票掛鉤證券雷</h4>
+                    <div class="risk-severity">
+                        <span class="label">嚴重度</span>
+                        <div class="risk-bar">
+                            <div class="risk-bar-fill" style="width: 50%;"></div>
+                        </div>
+                        <span class="label">50%</span>
+                    </div>
+                    <p><strong>現狀：</strong>2025年1月發行股票掛鉤證券（Equity-Linked Securities），Q3衍生工具公允價值波動導致¥7,320萬收益，但伴隨¥5,110萬利息支出（非現金¥4,620萬）。</p>
+                    <p><strong>風險：</strong>若股價大漲，衍生工具虧損將反噬利潤；若轉股，現有股東將面臨稀釋。</p>
+                    <span class="action-label">對沖操作：監控轉換價格，股價接近轉換價時減倉</span>
+                </div>
+
+                <div class="risk-item">
+                    <h4>風險5：地緣政治 - 中美關稅風暴</h4>
+                    <div class="risk-severity">
+                        <span class="label">嚴重度</span>
+                        <div class="risk-bar">
+                            <div class="risk-bar-fill" style="width: 60%;"></div>
+                        </div>
+                        <span class="label">60%</span>
+                    </div>
+                    <p><strong>風險：</strong>若美國對中國商品加徵關稅（10-25%），MINISO美國市場毛利率將被嚴重壓縮（當前美國門店421家，占海外總數12%）。</p>
+                    <p><strong>應對：</strong>公司已在越南、泰國建立供應鏈備份，但轉移需1-2年過渡期。</p>
+                    <span class="action-label">對沖操作：關稅落地前減持美國敞口，轉配東南亞主題ETF</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Deep Dive Section -->
+        <div class="ai-section">
+            <h2>🤖 AI 深度透視：空方視角 & 預期差挖掘</h2>
+
+            <div class="ai-grid">
+                <div class="ai-card">
+                    <h3><span class="icon">🐻</span>紅隊測試：為什麼不該投資MINISO？</h3>
+                    <ul>
+                        <li><strong>增長陷阱：</strong>收入增速28.2%亮眼，但利潤增速僅14.8%（調整後經營利潤），剪刀差擴大說明規模不經濟。直營店擴張是"燒錢換規模"，而非真實盈利能力提升。</li>
+                        <li><strong>現金流幻覺：</strong>經營現金流¥12.99億看似強勁，但其中包含大量"預收賬款"（合約負債¥2.87億），實際自由現金流僅¥9.69億，且資本開支¥3.3億中大部分用於低回報直營店裝修。</li>
+                        <li><strong>永輝黑洞：</strong>收購永輝20%股權是災難性決策，Q3虧損吃掉33%利潤。管理層試圖通過"零售協同"講故事，但永輝虧損根源是商業模式崩潰（線下超市被電商碾壓），MINISO救不了。</li>
+                        <li><strong>估值泡沫：</strong>PE 21.5x高於同業平均（美國折扣零售商Dollar General僅15x），憑什麼溢價？IP驅動模式尚未證明可持續性，一旦迪士尼/三麗鷗不續約，流量立刻崩盤。</li>
+                        <li><strong>中國風險敞口：</strong>58%收入來自中國內地，但中國零售增速腰斬（從7%降至3.2%）。10月單月SSS雖達低雙位數，但這是"國慶黃金周+政府消費券"短期刺激，不可持續。</li>
+                    </ul>
+                </div>
+
+                <div class="ai-card">
+                    <h3><span class="icon">🔍</span>預期差挖掘：市場忽視了什麼？</h3>
+                    <ul>
+                        <li><strong>財務異常點1：營收增加28.2%，但淨利潤下降31.6%</strong> - 表面原因是永輝虧損，但更深層問題是核心業務盈利能力惡化。銷售及分銷開支同比暴增43.5%（¥14.3億），遠超收入增速，說明流量獲取成本失控。</li>
+                        <li><strong>財務異常點2：毛利率穩定44.7%，但調整後淨利潤率暴跌2pp</strong> - 問題出在中後台。一般及行政開支同比激增45.6%（¥3.44億），主因是TOP TOY股權激勵費用（¥7,970萬）和總部人員擴編。這說明管理層在"賭"TOP TOY能救命，但目前只是燒錢。</li>
+                        <li><strong>隱藏價值1：TOP TOY的分拆潛力</strong> - 市場忽視了TOP TOY可獨立IPO的可能性。對標泡泡瑪特（PS 5-6x），TOP TOY年化收入¥20億，合理估值$1-1.5B。若分拆，MINISO可解鎖隱藏價值，且剝離虧損業務（TOP TOY當前虧損）。</li>
+                        <li><strong>隱藏價值2：供應鏈護城河被低估</strong> - MINISO擁有2,000+供應商網絡，能以成本價+5-8%加成拿貨，而競爭對手需+15-20%。這種採購優勢在通脹環境下是核武器，但市場只關注門店數量，忽視供應鏈定價權。</li>
+                        <li><strong>催化劑預期差：海外直營店盈利拐點將至</strong> - 當前直營店虧損拖累利潤率，但北美/歐洲門店已進入成熟期（開店2年後單店盈利能力提升50%+）。2026年Q2起，海外直營店將從"成本中心"轉為"利潤奶牛"，屆時利潤率將反彈至18-20%。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Investment Score -->
+            <div class="score-section">
+                <h3>🎯 AI投資價值評分（綜合維度）</h3>
+                <div class="score-circle">
+                    <span class="score-value">70%</span>
+                </div>
+                <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                    <strong>評分邏輯：</strong>增長故事強（+20分），IP模式創新（+15分），現金流穩健（+15分），海外擴張潛力大（+10分），但利潤率惡化（-10分），永輝拖累嚴重（-15分），中國消費疲軟（-5分）。<br><br>
+                    <strong>結論：</strong>這是一家<span style="color: var(--neon-green); font-weight: 600;">值得投資但需要耐心</span>的公司。短期（6個月）受利潤率壓力和永輝虧損壓制，股價可能震盪於$20-24區間；中期（12-18個月）若海外直營店盈利拐點兌現 + TOP TOY分拆，目標價$28-32；長期（3年）若中國消費復甦 + IP授權續約成功，目標價$35-40。
+                </p>
+
+                <div class="strategy-box">
+                    <h4>💰 $10,000分步交易執行策略</h4>
+                    <div class="strategy-step">
+                        <span class="step-label">步驟1：初始建倉 $3,000（30%倉位）@ $21.50-22.00</span>
+                        <p><strong>理由：</strong>當前價$21.82接近支撐位$21.50（50日均線），風險收益比合理。買入137股ADS（每股代表4股普通股），分2筆執行（$1,500 limit order @ $21.50, $1,500 @ $21.80）。</p>
+                    </div>
+                    <div class="strategy-step">
+                        <span class="step-label">步驟2：加倉 $2,000（20%倉位）@ $19.50-20.50（若股價回調）</span>
+                        <p><strong>理由：</strong>若永輝虧損進一步惡化或中國SSS數據不及預期，股價可能回調至$19.50（200日均線）。此時安全邊際更高，加倉買入95股。</p>
+                    </div>
+                    <div class="strategy-step">
+                        <span class="step-label">步驟3：核心倉位 $3,000（30%倉位）@ $23.50-24.50（突破阻力位）</span>
+                        <p><strong>理由：</strong>若Q4財報證明利潤率企穩 + 10月SSS持續高增長，股價突破$24阻力位，趨勢確立。此時追高買入120股，鎖定上漲趨勢。</p>
+                    </div>
+                    <div class="strategy-step">
+                        <span class="step-label">步驟4：對沖倉位 $2,000（20%倉位）投資中國消費主題ETF</span>
+                        <p><strong>理由：</strong>MINISO 58%收入來自中國，若中國消費復甦（政府刺激政策落地），整個板塊將受益。購買KraneShares MSCI China Consumer ETF（KBUY）作為對沖，若MINISO跑輸大盤，ETF可補償損失。</p>
+                    </div>
+                    <div class="strategy-step">
+                        <span class="step-label">止損設置：個股止損線$19.00（-13% from entry），ETF止損線-10%</span>
+                        <p><strong>理由：</strong>$19以下說明商業模式出現根本性問題（利潤率崩潰或中國市場失速），必須止損離場。最大虧損控制在$1,300以內。</p>
+                    </div>
+                    <div class="strategy-step">
+                        <span class="step-label">止盈設置：分批止盈 @ $26（+19%，賣出30%）、$30（+38%，賣出40%）、$35（+60%，賣出剩餘30%）</span>
+                        <p><strong>理由：</strong>階梯式止盈鎖定利潤，避免"坐過山車"。若股價達$35，總回報約$4,200（+42%），考慮時間成本（18-24個月），年化回報21-28%，超越S&P 500。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card, .opportunity-card, .risk-item');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 50);
+            });
+
+            // Animate risk bars
+            setTimeout(() => {
+                const riskBars = document.querySelectorAll('.risk-bar-fill');
+                riskBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }, 800);
+        });
+    </script>
+</body>
+</html>
