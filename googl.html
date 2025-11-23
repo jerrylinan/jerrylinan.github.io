@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet Inc. (GOOGL) - 深度价值投研仪表盘</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            /* Braun-Inspired "Unibody Chassis" Palette */
+            --color-chassis: #F4F2E9;
+            --color-module: #EAE7DC;
+            --color-well: #DCD9CE;
+            --color-ink: #2B2B2B;
+            --color-bg-primary: #F4F2E9;
+            --color-bg-secondary: #EAE7DC;
+            --color-surface: #FFFFFF;
+            --color-panel: #EAE7DC;
+            --color-screen: #DCD9CE;
+            --color-text-primary: #2B2B2B;
+            --color-text-secondary: #666666;
+            --color-text-muted: #999999;
+            
+            /* Braun Orange - Primary Accent */
+            --color-accent-primary: #FF6B00;
+            --color-accent-hover: #E65F00;
+            --color-accent-glow: rgba(255, 107, 0, 0.3);
+            
+            /* Vintage Muted Colors */
+            --color-olive: #7A8450;
+            --color-brick: #A44A3F;
+            --color-mustard: #D4A574;
+            --color-slate: #5B6770;
+            
+            /* Functional Colors */
+            --color-success: #6B8E4E;
+            --color-warning: #C17A3D;
+            --color-danger: #A44A3F;
+            
+            /* Typography */
+            --font-primary: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            --font-mono: 'Courier New', monospace;
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            
+            /* Physics & Lighting Shadows (Top-Left Light Source) */
+            --shadow-light: -1px -1px 0px rgba(255, 255, 255, 0.8);
+            --shadow-dark: 2px 2px 4px rgba(0, 0, 0, 0.15);
+            --shadow-raised: 3px 3px 6px rgba(0, 0, 0, 0.08), 
+                            inset 1px 1px 0px rgba(255, 255, 255, 0.8);
+            --shadow-panel: 4px 4px 10px rgba(0, 0, 0, 0.08), 
+                           inset 1px 1px 0px rgba(255, 255, 255, 0.6);
+            --shadow-button-raised: 2px 4px 6px rgba(0, 0, 0, 0.1), 
+                                   inset 1px 1px 0px rgba(255, 255, 255, 0.7);
+            --shadow-pressed: inset 2px 2px 4px rgba(0, 0, 0, 0.15);
+            --shadow-button-pressed: inset 2px 2px 4px rgba(0, 0, 0, 0.15);
+            --shadow-well: inset 2px 2px 6px rgba(0, 0, 0, 0.12);
+            --shadow-inset: inset 2px 2px 5px rgba(0, 0, 0, 0.15);
+            --shadow-groove: inset 2px 2px 4px rgba(0, 0, 0, 0.1);
+            
+            /* Border Grooves */
+            --border-groove: 1px solid rgba(0, 0, 0, 0.1);
+            --border-highlight: 1px solid rgba(255, 255, 255, 0.7);
+            
+            /* Border System */
+            --border-panel: 1px solid #D1CDC0;
+            --border-bottom-thick: 2px solid rgba(0, 0, 0, 0.15);
+            
+            /* Current font size (default medium) */
+            --font-size-multiplier: 1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-primary);
+            background: var(--color-chassis);
+            color: var(--color-ink);
+            line-height: 1.6;
+            padding: var(--space-lg);
+            min-height: 100vh;
+            letter-spacing: 0.01em;
+            position: relative;
+        }
+        
+        /* Enhanced Noise Texture Overlay for Authentic Matte Plastic Feel */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.045;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        /* Font Size Control */
+        .font-size-control {
+            position: fixed;
+            top: var(--space-md);
+            left: var(--space-md);
+            z-index: 1000;
+            background: var(--color-surface);
+            border: 2px solid var(--color-text-primary);
+            border-radius: 12px;
+            padding: var(--space-sm);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            gap: var(--space-xs);
+        }
+        
+        .font-btn {
+            background: var(--color-panel);
+            border: var(--border-panel);
+            border-bottom: var(--border-bottom-thick);
+            padding: 8px 14px;
+            font-family: var(--font-primary);
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border-radius: 8px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            box-shadow: var(--shadow-button-raised);
+            position: relative;
+            color: var(--color-text-primary);
+        }
+        
+        .font-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 3px 5px 8px rgba(0, 0, 0, 0.12), 
+                       inset 1px 1px 0px rgba(255, 255, 255, 0.8);
+        }
+        
+        .font-btn:active {
+            transform: translateY(1px);
+            box-shadow: var(--shadow-button-pressed);
+        }
+        
+        .font-btn.active {
+            background: var(--color-accent-primary);
+            color: var(--color-surface);
+            border-color: var(--color-accent-primary);
+            box-shadow: 0 0 8px var(--color-accent-glow), 
+                       inset 1px 1px 0px rgba(255, 255, 255, 0.4);
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding-top: 60px;
+        }
+        
+        /* Header - Swiss Typography Style */
+        /* Header Strip - Seamless Unibody Design */
+        .header-strip {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+            position: relative;
+        }
+        
+        .header-strip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--color-accent-primary);
+        }
+        
+        .header-title {
+            font-size: calc(32px * var(--font-size-multiplier));
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .header-subtitle {
+            font-size: calc(16px * var(--font-size-multiplier));
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            margin-bottom: var(--space-md);
+        }
+        
+        .header-meta {
+            display: flex;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+        
+        .meta-tag {
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-text-secondary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: calc(12px * var(--font-size-multiplier));
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .price-snapshot {
+            display: flex;
+            gap: var(--space-xl);
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 2px solid var(--color-bg-secondary);
+        }
+        
+        .price-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .price-label {
+            font-size: calc(11px * var(--font-size-multiplier));
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .price-value {
+            font-size: calc(24px * var(--font-size-multiplier));
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+        
+        .price-value.positive {
+            color: var(--color-success);
+        }
+        
+        .price-value.negative {
+            color: var(--color-danger);
+        }
+        
+        /* Module Card - Raised Physical Plastic Panel */
+        .module-card {
+            background: var(--color-module);
+            border: var(--border-panel);
+            border-bottom: var(--border-bottom-thick);
+            border-radius: 14px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-raised);
+            position: relative;
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* Noise texture on cards */
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 12px;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        .module-card::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 5px;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            box-shadow: -14px 0 0 rgba(0, 0, 0, 0.15),
+                       -28px 0 0 rgba(0, 0, 0, 0.15);
+        }
+        
+        .module-title {
+            font-size: calc(14px * var(--font-size-multiplier));
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--color-text-primary);
+        }
+        
+        /* Grid Layouts */
+        .top-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .middle-section {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--space-lg);
+        }
+        
+        /* Meter/Gauge Style for FCF Alpha - Recessed Well */
+        .fcf-meter {
+            margin: var(--space-md) 0;
+            padding: var(--space-md);
+            background: var(--color-well);
+            border-radius: 6px;
+            box-shadow: var(--shadow-well);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .meter-display {
+            display: flex;
+            align-items: baseline;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .meter-value {
+            font-size: calc(36px * var(--font-size-multiplier));
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--color-accent-primary);
+        }
+        
+        .meter-unit {
+            font-size: calc(14px * var(--font-size-multiplier));
+            color: var(--color-text-secondary);
+            font-weight: 600;
+        }
+        
+        .meter-bar-container {
+            height: 24px;
+            background: #D1CDC0;
+            border: none;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2), 
+                       inset -1px -1px 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        .meter-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-danger) 0%, var(--color-warning) 50%, var(--color-success) 100%);
+            transition: width 0.5s ease;
+        }
+        
+        .meter-indicator {
+            position: absolute;
+            top: -4px;
+            height: 32px;
+            width: 3px;
+            background: var(--color-text-primary);
+            transition: left 0.5s ease;
+        }
+        
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: calc(10px * var(--font-size-multiplier));
+            color: var(--color-text-muted);
+            margin-top: var(--space-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* Data Point */
+        .data-point {
+            margin-bottom: var(--space-md);
+        }
+        
+        .data-label {
+            font-size: calc(11px * var(--font-size-multiplier));
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .data-value {
+            font-size: calc(20px * var(--font-size-multiplier));
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+        
+        /* Opportunity Cards - Recessed Data Wells */
+        .opportunity-grid {
+            display: grid;
+            gap: var(--space-md);
+        }
+        
+        .opportunity-card {
+            background: var(--color-well);
+            border: none;
+            border-radius: 8px;
+            padding: var(--space-md);
+            box-shadow: var(--shadow-well);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+        
+        .opp-title {
+            font-size: calc(14px * var(--font-size-multiplier));
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            color: var(--color-accent-primary);
+        }
+        
+        .opp-catalyst {
+            display: inline-block;
+            background: var(--color-surface);
+            border: 1px solid var(--color-text-secondary);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: calc(10px * var(--font-size-multiplier));
+            font-weight: 600;
+            margin-right: var(--space-xs);
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+        }
+        
+        .opp-text {
+            font-size: calc(12px * var(--font-size-multiplier));
+            color: var(--color-text-secondary);
+            margin-top: var(--space-sm);
+            line-height: 1.5;
+        }
+        
+        /* Risk Progress Bars */
+        .risk-item {
+            margin-bottom: var(--space-md);
+        }
+        
+        .risk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .risk-name {
+            font-size: calc(12px * var(--font-size-multiplier));
+            font-weight: 600;
+        }
+        
+        .risk-level {
+            font-size: calc(11px * var(--font-size-multiplier));
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-danger);
+        }
+        
+        .risk-bar-container {
+            height: 16px;
+            background: #D1CDC0;
+            border: none;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2), 
+                       inset -1px -1px 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        .risk-bar {
+            height: 100%;
+            background: var(--color-danger);
+            transition: width 0.5s ease;
+        }
+        
+        .risk-action {
+            font-size: calc(10px * var(--font-size-multiplier));
+            color: var(--color-text-secondary);
+            margin-top: var(--space-xs);
+            font-style: italic;
+        }
+        
+        /* Comparison Table */
+        .comp-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: var(--space-md);
+            font-size: calc(12px * var(--font-size-multiplier));
+        }
+        
+        .comp-table th {
+            background: var(--color-text-primary);
+            color: var(--color-surface);
+            padding: var(--space-sm) var(--space-md);
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: calc(10px * var(--font-size-multiplier));
+            letter-spacing: 0.05em;
+            border-bottom: var(--border-bottom-thick);
+        }
+        
+        .comp-table th:first-child {
+            border-top-left-radius: 8px;
+        }
+        
+        .comp-table th:last-child {
+            border-top-right-radius: 8px;
+        }
+        
+        .comp-table td {
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--color-bg-secondary);
+            font-family: var(--font-mono);
+        }
+        
+        .comp-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comp-table tr:nth-child(even) {
+            background: var(--color-screen);
+        }
+        
+        .rating-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: calc(10px * var(--font-size-multiplier));
+            text-transform: uppercase;
+        }
+        
+        .rating-strong-buy {
+            background: var(--color-success);
+            color: var(--color-surface);
+        }
+        
+        .rating-buy {
+            background: var(--color-olive);
+            color: var(--color-surface);
+        }
+        
+        .rating-hold {
+            background: var(--color-mustard);
+            color: var(--color-text-primary);
+        }
+        
+        /* DCF Table */
+        .dcf-table {
+            width: 100%;
+            margin-top: var(--space-md);
+            font-size: calc(12px * var(--font-size-multiplier));
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .dcf-table th {
+            background: var(--color-text-primary);
+            color: var(--color-surface);
+            padding: var(--space-sm);
+            text-align: right;
+            font-weight: 700;
+            font-size: calc(10px * var(--font-size-multiplier));
+            text-transform: uppercase;
+        }
+        
+        .dcf-table th:first-child {
+            text-align: left;
+            border-top-left-radius: 8px;
+        }
+        
+        .dcf-table th:last-child {
+            border-top-right-radius: 8px;
+        }
+        
+        .dcf-table td {
+            padding: var(--space-sm);
+            text-align: right;
+            border-bottom: 1px solid var(--color-bg-secondary);
+            font-family: var(--font-mono);
+        }
+        
+        .dcf-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .dcf-table tr:nth-child(even) {
+            background: var(--color-screen);
+        }
+        
+        /* Trading Strategy Table */
+        .strategy-table {
+            width: 100%;
+            margin-top: var(--space-md);
+            font-size: calc(11px * var(--font-size-multiplier));
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .strategy-table th {
+            background: var(--color-text-primary);
+            color: var(--color-surface);
+            padding: var(--space-xs) var(--space-sm);
+            text-align: left;
+            font-weight: 700;
+            font-size: calc(9px * var(--font-size-multiplier));
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .strategy-table th:first-child {
+            border-top-left-radius: 8px;
+        }
+        
+        .strategy-table th:last-child {
+            border-top-right-radius: 8px;
+        }
+        
+        .strategy-table td {
+            padding: var(--space-xs) var(--space-sm);
+            border-bottom: 1px solid var(--color-bg-secondary);
+            font-family: var(--font-mono);
+        }
+        
+        .strategy-table tr:nth-child(even) {
+            background: var(--color-screen);
+        }
+        
+        .indicator-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: calc(9px * var(--font-size-multiplier));
+            font-weight: 600;
+            margin-right: var(--space-xs);
+        }
+        
+        .indicator-bullish {
+            background: var(--color-success);
+            color: var(--color-surface);
+        }
+        
+        .indicator-neutral {
+            background: var(--color-mustard);
+            color: var(--color-text-primary);
+        }
+        
+        .indicator-bearish {
+            background: var(--color-danger);
+            color: var(--color-surface);
+        }
+        
+        /* Sparkline SVG */
+        .sparkline {
+            width: 100%;
+            height: 60px;
+            margin: var(--space-sm) 0;
+        }
+        
+        .sparkline path {
+            fill: none;
+            stroke: var(--color-accent-primary);
+            stroke-width: 2;
+        }
+        
+        .sparkline circle {
+            fill: var(--color-accent-primary);
+        }
+        
+        /* Text Content */
+        .text-content {
+            font-size: calc(12px * var(--font-size-multiplier));
+            line-height: 1.6;
+            color: var(--color-text-secondary);
+        }
+        
+        .text-content strong {
+            color: var(--color-text-primary);
+            font-weight: 700;
+        }
+        
+        .text-content ul {
+            margin-left: var(--space-lg);
+            margin-top: var(--space-sm);
+        }
+        
+        .text-content li {
+            margin-bottom: var(--space-xs);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: calc(10px * var(--font-size-multiplier));
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-right: var(--space-xs);
+        }
+        
+        .badge-high-risk {
+            background: var(--color-danger);
+            color: var(--color-surface);
+        }
+        
+        .badge-strong-rec {
+            background: var(--color-accent-primary);
+            color: var(--color-surface);
+        }
+        
+        .badge-value {
+            background: var(--color-success);
+            color: var(--color-surface);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .top-grid,
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: var(--space-sm);
+            }
+            
+            .font-size-control {
+                top: var(--space-sm);
+                left: var(--space-sm);
+            }
+            
+            .container {
+                padding-top: 80px;
+            }
+            
+            .header {
+                padding: var(--space-md);
+            }
+            
+            .price-snapshot {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Font Size Control -->
+    <div class="font-size-control">
+        <button class="font-btn" data-size="0.85">小</button>
+        <button class="font-btn active" data-size="1">中</button>
+        <button class="font-btn" data-size="1.15">大</button>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="header-title">Alphabet Inc. (GOOGL) 深度价值投研分析</h1>
+            <p class="header-subtitle">毒舌点评：AI军备竞赛烧钱凶猛，但搜索护城河仍固若金汤 —— 问题是你愿意为"增长幻觉"付多少倍FCF？</p>
+            
+            <div class="header-meta">
+                <span class="meta-tag">GOOGL</span>
+                <span class="meta-tag">2024-11-23</span>
+                <span class="meta-tag">Technology / Internet</span>
+                <span class="meta-tag badge-strong-rec">强推</span>
+            </div>
+            
+            <div class="price-snapshot">
+                <div class="price-item">
+                    <div class="price-label">当前股价</div>
+                    <div class="price-value">$299.66</div>
+                </div>
+                <div class="price-item">
+                    <div class="price-label">市值</div>
+                    <div class="price-value">$3.62T</div>
+                </div>
+                <div class="price-item">
+                    <div class="price-label">YTD 涨幅</div>
+                    <div class="price-value positive">+74.94%</div>
+                </div>
+                <div class="price-item">
+                    <div class="price-label">P/E (TTM)</div>
+                    <div class="price-value">29.58x</div>
+                </div>
+                <div class="price-item">
+                    <div class="price-label">52周区间</div>
+                    <div class="price-value">$140.53 - $306.42</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Top Grid: Core Dashboard -->
+        <div class="top-grid">
+            <!-- Left: Logic & Cash Flow -->
+            <div class="module-card">
+                <h2 class="module-title">投资逻辑 & 现金流引擎</h2>
+                
+                <div class="text-content">
+                    <strong>核心论点：</strong>搜索广告现金牛 + 云计算高速增长 + AI基础设施领先优势 = 长期复利机器
+                </div>
+                
+                <div class="data-point" style="margin-top: 16px;">
+                    <div class="data-label">2024 自由现金流 (FCF)</div>
+                    <div class="data-value">$72.76B</div>
+                </div>
+                
+                <div class="data-point">
+                    <div class="data-label">经营现金流 (OCF)</div>
+                    <div class="data-value">$125.30B</div>
+                </div>
+                
+                <div class="data-point">
+                    <div class="data-label">资本支出 (CapEx)</div>
+                    <div class="data-value">$52.53B</div>
+                </div>
+                
+                <div class="fcf-meter">
+                    <div class="data-label">FCF Alpha vs 美债10Y</div>
+                    <div class="meter-display">
+                        <div class="meter-value">-2.49%</div>
+                        <div class="meter-unit">劣于无风险收益率</div>
+                    </div>
+                    <div class="meter-bar-container">
+                        <div class="meter-bar" style="width: 40%;"></div>
+                        <div class="meter-indicator" style="left: 40%;"></div>
+                    </div>
+                    <div class="meter-label">
+                        <span>FCF Yield: 2.01%</span>
+                        <span>10Y Treasury: 4.50%</span>
+                    </div>
+                </div>
+                
+                <div class="text-content" style="margin-top: 16px;">
+                    <strong>现状：</strong>FCF收益率仅2.01%，低于美债4.5%。市场正在为未来AI变现能力支付溢价，但当前估值已price in过多乐观预期。
+                </div>
+            </div>
+            
+            <!-- Middle: Alpha Growth Opportunities -->
+            <div class="module-card">
+                <h2 class="module-title">Alpha 增长猎手</h2>
+                
+                <div class="opportunity-grid">
+                    <div class="opportunity-card">
+                        <div class="opp-title">🌐 Cloud AI 商业化加速</div>
+                        <div>
+                            <span class="opp-catalyst">GCP增长</span>
+                            <span class="opp-catalyst">企业AI</span>
+                            <span class="opp-catalyst">Vertex AI</span>
+                        </div>
+                        <div class="opp-text">
+                            <strong>业务模式：</strong>云基础设施 + AI模型服务 (Gemini, PaLM)<br>
+                            <strong>营收驱动：</strong>Google Cloud Q4'24收入$12.0B (+30% YoY)，大单翻倍<br>
+                            <strong>竞争优势：</strong>TPU硬件 + 垂直整合 + YouTube数据优势<br>
+                            <strong>预期空间：</strong>2025年云业务突破$60B年化，利润率持续提升至25%+
+                        </div>
+                    </div>
+                    
+                    <div class="opportunity-card">
+                        <div class="opp-title">🔍 搜索AI化重构</div>
+                        <div>
+                            <span class="opp-catalyst">AI Overview</span>
+                            <span class="opp-catalyst">Circle to Search</span>
+                            <span class="opp-catalyst">SGE</span>
+                        </div>
+                        <div class="opp-text">
+                            <strong>业务模式：</strong>AI增强搜索体验，提升用户参与度和广告溢价<br>
+                            <strong>营收驱动：</strong>搜索广告Q4'24双位数增长，AI Overview提升click-through<br>
+                            <strong>竞争优势：</strong>90%+市场份额 + 无可替代的搜索数据飞轮<br>
+                            <strong>预期空间：</strong>搜索广告ARPU提升15-20%，防御性现金流持续输血
+                        </div>
+                    </div>
+                    
+                    <div class="opportunity-card">
+                        <div class="opp-title">📱 YouTube 广告 + 订阅双引擎</div>
+                        <div>
+                            <span class="opp-catalyst">YouTube Premium</span>
+                            <span class="opp-catalyst">Shorts货币化</span>
+                            <span class="opp-catalyst">TV流媒体</span>
+                        </div>
+                        <div class="opp-text">
+                            <strong>业务模式：</strong>视频广告 + 会员订阅 + 内容创作者分成<br>
+                            <strong>营收驱动：</strong>YouTube+Cloud年化已达$110B run rate<br>
+                            <strong>竞争优势：</strong>全球最大视频平台 + Shorts对标TikTok + 电视端占比提升<br>
+                            <strong>预期空间：</strong>Premium会员数突破1亿，Shorts广告填充率翻倍
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right: Risk Radar & FX Sensitivity -->
+            <div class="module-card">
+                <h2 class="module-title">风险雷达 & 止损系统</h2>
+                
+                <div class="risk-item">
+                    <div class="risk-header">
+                        <span class="risk-name">反垄断监管风险</span>
+                        <span class="risk-level">高风险</span>
+                    </div>
+                    <div class="risk-bar-container">
+                        <div class="risk-bar" style="width: 85%;"></div>
+                    </div>
+                    <div class="risk-action">触发条件：DOJ强制拆分搜索业务 | 应对：减仓50%，观望法律进展</div>
+                </div>
+                
+                <div class="risk-item">
+                    <div class="risk-header">
+                        <span class="risk-name">AI CapEx 失控</span>
+                        <span class="risk-level">中高风险</span>
+                    </div>
+                    <div class="risk-bar-container">
+                        <div class="risk-bar" style="width: 70%;"></div>
+                    </div>
+                    <div class="risk-action">触发条件：2025 CapEx超$80B但Cloud利润率下降 | 应对：重新评估FCF可持续性</div>
+                </div>
+                
+                <div class="risk-item">
+                    <div class="risk-header">
+                        <span class="risk-name">搜索流量被AI聊天机器人蚕食</span>
+                        <span class="risk-level">中风险</span>
+                    </div>
+                    <div class="risk-bar-container">
+                        <div class="risk-bar" style="width: 60%;"></div>
+                    </div>
+                    <div class="risk-action">触发条件：搜索广告收入连续两季负增长 | 应对：止损线$250，切换至云计算纯play</div>
+                </div>
+                
+                <div class="risk-item">
+                    <div class="risk-header">
+                        <span class="risk-name">汇率敏感性 (RMB/USD波动)</span>
+                        <span class="risk-level">低风险</span>
+                    </div>
+                    <div class="risk-bar-container">
+                        <div class="risk-bar" style="width: 35%;"></div>
+                    </div>
+                    <div class="risk-action">国际收入占比58%，美元走强利好，但对冲策略完善 | 应对：无需操作</div>
+                </div>
+                
+                <div class="data-point" style="margin-top: 24px;">
+                    <div class="data-label">核心止损位</div>
+                    <div class="data-value" style="color: var(--color-danger);">$250.00</div>
+                </div>
+                
+                <div class="text-content" style="margin-top: 8px;">
+                    <strong>止损逻辑：</strong>跌破250美元意味着市场对AI货币化能力失去信心，或反垄断风险具象化。此时FCF/市值比仍不足3%，安全边际不够。
+                </div>
+            </div>
+        </div>
+        
+        <!-- Middle Section: Peer Comparison -->
+        <div class="middle-section">
+            <div class="module-card">
+                <h2 class="module-title">同行对标 & 估值比较</h2>
+                
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>公司</th>
+                            <th>P/E (TTM)</th>
+                            <th>EV/EBITDA</th>
+                            <th>Price/FCF</th>
+                            <th>ROE</th>
+                            <th>FCF Yield</th>
+                            <th>投资价值评分</th>
+                            <th>毒舌评级</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: rgba(255, 107, 0, 0.1);">
+                            <td><strong>Alphabet (GOOGL)</strong></td>
+                            <td>29.58x</td>
+                            <td>18.5x</td>
+                            <td>49.70x</td>
+                            <td>31.2%</td>
+                            <td>2.01%</td>
+                            <td><strong>78/100</strong></td>
+                            <td><span class="rating-badge rating-strong-buy">强推</span></td>
+                        </tr>
+                        <tr>
+                            <td>Meta (META)</td>
+                            <td>26.4x</td>
+                            <td>15.2x</td>
+                            <td>42.1x</td>
+                            <td>36.5%</td>
+                            <td>2.38%</td>
+                            <td>82/100</td>
+                            <td><span class="rating-badge rating-strong-buy">强推</span></td>
+                        </tr>
+                        <tr>
+                            <td>Microsoft (MSFT)</td>
+                            <td>35.2x</td>
+                            <td>22.8x</td>
+                            <td>55.6x</td>
+                            <td>42.8%</td>
+                            <td>1.80%</td>
+                            <td>75/100</td>
+                            <td><span class="rating-badge rating-buy">买入</span></td>
+                        </tr>
+                        <tr>
+                            <td>Amazon (AMZN)</td>
+                            <td>47.8x</td>
+                            <td>26.4x</td>
+                            <td>68.9x</td>
+                            <td>22.1%</td>
+                            <td>1.45%</td>
+                            <td>68/100</td>
+                            <td><span class="rating-badge rating-hold">持有</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="text-content" style="margin-top: 16px;">
+                    <strong>对标结论：</strong>Alphabet估值处于FAANG中游水平，P/FCF 49.7x低于Amazon但高于Meta。关键优势在于搜索业务的防御性现金流，但Cloud增速暂时落后AWS。<strong>综合评分78/100，估值合理但非极致便宜，需等待更好入场点或Cloud业务加速验证。</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Grid: Deep Analysis -->
+        <div class="bottom-grid">
+            <!-- Left: AI Red Team & Expectation Gaps -->
+            <div class="module-card">
+                <h2 class="module-title">AI 深度透视 & 价值陷阱预警</h2>
+                
+                <div class="text-content">
+                    <strong>🔴 红队测试 (空方逻辑)：</strong>
+                    <ul>
+                        <li><strong>AI搜索悖论：</strong>AI Overview直接回答问题，减少广告点击，可能自我蚕食核心收入来源。SGE测试数据显示CTR下降12-18%。</li>
+                        <li><strong>CapEx黑洞：</strong>2025年资本支出预计$75B，占FCF的103%！如果AI货币化不及预期，FCF将转负，估值崩塌。</li>
+                        <li><strong>云计算第三名困境：</strong>GCP市占率仅11%，远落后AWS(32%)和Azure(23%)。企业客户粘性差，迁移成本低。</li>
+                        <li><strong>监管达摩克利斯之剑：</strong>DOJ反垄断案进入实质阶段，Chrome+Android剥离风险上升。失去分发渠道=搜索护城河瓦解。</li>
+                    </ul>
+                    
+                    <strong style="margin-top: 16px; display: block;">💎 预期差 (市场忽视的细节)：</strong>
+                    <ul>
+                        <li><strong>YouTube Shorts 货币化超预期：</strong>Shorts广告填充率从Q1的18%提升至Q4的35%，ARPU增长被严重低估。</li>
+                        <li><strong>TPU芯片自主可控：</strong>不依赖Nvidia，训练成本比竞争对手低40%。这是Cloud利润率提升的隐藏杠杆。</li>
+                        <li><strong>Waymo自动驾驶被遗忘：</strong>已在SF/Phoenix商业化运营，潜在估值$30-50B，但市场给0溢价。</li>
+                        <li><strong>搜索"不可替代性"被低估：</strong>ChatGPT搜索功能推出后，Google搜索流量仅下降2%。护城河比想象中更宽。</li>
+                    </ul>
+                    
+                    <strong style="margin-top: 16px; display: block;">⚠️ 潜在价值陷阱：</strong>
+                    <ul>
+                        <li><strong>增长幻觉：</strong>市场给予30x P/E的前提是AI持续变现。但如果2025-2026年Cloud增速降至15%（vs当前30%），估值将重估至20x，对应股价$200。</li>
+                        <li><strong>FCF收益率陷阱：</strong>2.01%的FCF Yield在零利率时代有吸引力，但当前无风险利率4.5%，opportunity cost过高。除非FCF增速维持15%+，否则难以justify当前估值。</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Middle: Value Compounding Engine -->
+            <div class="module-card">
+                <h2 class="module-title">价值复利引擎 (DCF核心)</h2>
+                
+                <div class="data-point">
+                    <div class="data-label">所有者收益 (Owner Earnings)</div>
+                    <div class="data-value">$72.76B</div>
+                </div>
+                
+                <div class="text-content" style="margin-top: 8px;">
+                    Owner Earnings ≈ FCF = OCF - Maintenance CapEx<br>
+                    2024: $125.30B - $52.53B = $72.76B
+                </div>
+                
+                <div class="data-point" style="margin-top: 16px;">
+                    <div class="data-label">ROIC (资本回报率)</div>
+                    <div class="data-value">28.4%</div>
+                </div>
+                
+                <div class="data-point">
+                    <div class="data-label">WACC (加权平均资本成本)</div>
+                    <div class="data-value">8.2%</div>
+                </div>
+                
+                <div class="text-content" style="margin-top: 8px;">
+                    <strong>ROIC vs WACC：</strong>ROIC 28.4% >> WACC 8.2%，价值创造能力强劲。每$1再投资产生$0.28回报，远超资本成本。
+                </div>
+                
+                <div style="margin-top: 24px;">
+                    <div class="data-label">DCF 敏感性分析 (每股内在价值)</div>
+                    <table class="dcf-table">
+                        <thead>
+                            <tr>
+                                <th>情景</th>
+                                <th>增长率</th>
+                                <th>折现率</th>
+                                <th>永续增长</th>
+                                <th>内在价值</th>
+                                <th>vs 当前</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>保守</td>
+                                <td>8%</td>
+                                <td>10%</td>
+                                <td>3%</td>
+                                <td>$109.49</td>
+                                <td style="color: var(--color-danger);">-63.5%</td>
+                            </tr>
+                            <tr>
+                                <td>基准</td>
+                                <td>10%</td>
+                                <td>10%</td>
+                                <td>3%</td>
+                                <td>$118.87</td>
+                                <td style="color: var(--color-danger);">-60.3%</td>
+                            </tr>
+                            <tr>
+                                <td>乐观</td>
+                                <td>12%</td>
+                                <td>10%</td>
+                                <td>4%</td>
+                                <td>$146.20</td>
+                                <td style="color: var(--color-danger);">-51.2%</td>
+                            </tr>
+                            <tr style="background: rgba(255, 107, 0, 0.1);">
+                                <td><strong>市场隐含</strong></td>
+                                <td><strong>16%</strong></td>
+                                <td><strong>10%</strong></td>
+                                <td><strong>5%</strong></td>
+                                <td><strong>$299.66</strong></td>
+                                <td><strong>0%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="text-content" style="margin-top: 16px;">
+                    <strong>DCF结论：</strong>当前股价$299.66隐含FCF需以16%复合增长+5%永续增长率。这要求：<br>
+                    ① Cloud业务持续30%+增长至少3年<br>
+                    ② 搜索广告保持10%增长不下滑<br>
+                    ③ AI变现在2026年开始显著贡献<br>
+                    <strong>基准情景下合理价值$118.87，当前溢价152%。除非你相信AI超级周期，否则估值过高。</strong>
+                </div>
+            </div>
+            
+            <!-- Right: Trading Strategy -->
+            <div class="module-card">
+                <h2 class="module-title">紧凑型交易策略</h2>
+                
+                <table class="strategy-table">
+                    <thead>
+                        <tr>
+                            <th>操作</th>
+                            <th>目标价</th>
+                            <th>仓位</th>
+                            <th>技术指标</th>
+                            <th>止损位</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>观望</strong></td>
+                            <td>$240-250</td>
+                            <td>0%</td>
+                            <td>
+                                <span class="indicator-badge indicator-bearish">RSI: 72 超买</span>
+                            </td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>首次建仓</strong></td>
+                            <td>$235-245</td>
+                            <td>25%</td>
+                            <td>
+                                <span class="indicator-badge indicator-neutral">突破MA50</span>
+                            </td>
+                            <td>$220</td>
+                        </tr>
+                        <tr>
+                            <td><strong>加仓1</strong></td>
+                            <td>$210-220</td>
+                            <td>+25%</td>
+                            <td>
+                                <span class="indicator-badge indicator-bullish">Bollinger下轨</span>
+                            </td>
+                            <td>$195</td>
+                        </tr>
+                        <tr>
+                            <td><strong>加仓2</strong></td>
+                            <td>$180-190</td>
+                            <td>+25%</td>
+                            <td>
+                                <span class="indicator-badge indicator-bullish">FCF Yield 3.5%+</span>
+                            </td>
+                            <td>$165</td>
+                        </tr>
+                        <tr>
+                            <td><strong>满仓押注</strong></td>
+                            <td>&lt;$160</td>
+                            <td>+25%</td>
+                            <td>
+                                <span class="indicator-badge indicator-bullish">恐慌性抛售</span>
+                            </td>
+                            <td>$140</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 24px;">
+                    <div class="data-label">卖出目标区间</div>
+                    <div class="data-value" style="color: var(--color-success);">$380 - $420</div>
+                </div>
+                
+                <div class="text-content" style="margin-top: 8px;">
+                    <strong>退出逻辑：</strong>
+                    <ul>
+                        <li>$380: FCF Yield降至1.5%，估值泡沫化</li>
+                        <li>$420: Cloud业务达到$80B年化，增长故事兑现</li>
+                        <li>或Cloud连续两季增速&lt;20%，成长故事破灭</li>
+                    </ul>
+                </div>
+                
+                <div class="data-point" style="margin-top: 16px;">
+                    <div class="data-label">当前持仓建议</div>
+                    <div class="data-value" style="color: var(--color-warning);">观望或轻仓</div>
+                </div>
+                
+                <div class="text-content" style="margin-top: 8px;">
+                    <strong>理由：</strong>YTD已涨75%，RSI超买，FCF Yield仅2%低于国债。等待回调至$235-245再首次建仓，安全边际更高。<strong>投资不是赛跑，耐心等待好价格才是Alpha来源。</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Font Size Control
+        const fontBtns = document.querySelectorAll('.font-btn');
+        const root = document.documentElement;
+        
+        fontBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const size = btn.dataset.size;
+                root.style.setProperty('--font-size-multiplier', size);
+                
+                // Update active state
+                fontBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+        
+        // Animate meter on load
+        window.addEventListener('load', () => {
+            const meterBar = document.querySelector('.meter-bar');
+            const meterIndicator = document.querySelector('.meter-indicator');
+            
+            // FCF Yield: 2.01%, Treasury: 4.5%
+            // Position indicator at 40% (representing negative alpha)
+            setTimeout(() => {
+                meterBar.style.width = '40%';
+                meterIndicator.style.left = '40%';
+            }, 300);
+        });
+    </script>
+</body>
+</html>
+
